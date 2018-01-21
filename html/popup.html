@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="">
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/screen.min.css">
+        <link rel="stylesheet" href="/css/style.css">
+    </head>
+    <body ng-app="app" ng-controller="index" ng-cloak>
+        <div class="container">
+            <div class="row">
+                <table class="box-item">
+                    <tr>
+                        <td>Mã chứng khoán&nbsp;</td>
+                        <td>
+                            <div class="dropdown" ng-class="{'open':open_drop_down}">
+                                <button ng-click="openDropdown()" type="button" data-toggle="my-dropdown" class="btn btn-default">{{ display_selected }}<span class="caret"></span></button>
+                                <div class="dropdown-menu dropdown-lineitem">
+                                    <div class="input-group">
+                                        <input type="text" ng-model="keyword" placeholder="Search by name" class="form-control" ng-change="search()">
+                                        <div class="list-lineitem">
+                                            <ul class="sub">
+                                                <li ng-repeat="(key, value) in list_code" ng-click="selectCode(value)"><a href=""><b>{{ value.symbol }}</b> - {{ value.companyName }}</a></li>
+                                            </ul>
+                                        </div>
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default"><i class="icon-search"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td ng-if="selected.symbol">&nbsp;<a target="_blank" href="http://www.cophieu68.vn/snapshot.php?id={{ selected.symbol }}">Chi tiết</a></td>
+                    </tr>
+                </table>
+            </div>
+            <br>
+            <div class="row">
+                <center>
+                    <div id="fan-quote-170">Không có dữ liệu nào</div>
+                </center>
+            </div>
+        </div>
+        <script src="https://www.fireant.vn/Scripts/web/widgets.js"></script>
+        <script src="/scripts/angular.min.js"></script>
+        <script src="/scripts/handle.js"></script>
+    </body>
+</html>
