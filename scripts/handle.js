@@ -4,13 +4,16 @@ app.config(['$compileProvider', function($compileProvider) {
     $compileProvider.debugInfoEnabled(false);
 }]);
 
-app.controller('index', function($scope, $http) {
+app.controller('index', function($scope, $http, $timeout) {
 
-    $scope.list_code = [];
-    $scope.selected  = JSON.parse(localStorage.selected) || {};
+    $scope.list_code        = [];
+    $scope.loading          = false;
+    $scope.open_drop_down   = false;
+    $scope.selected         = localStorage.selected ? JSON.parse(localStorage.selected) : {};
     $scope.display_selected = ($scope.selected.symbol) ? $scope.selected.symbol + ' - ' + $scope.selected.companyName : 'Chọn mã chứng khoán';
 
-    var renderChart = function(symbols) {
+    let renderChart = function(symbols) {
+        $scope.loading = true;
         new FireAnt.QuoteWidget({
             "container_id": "fan-quote-170",
             "symbols": symbols,
@@ -21,6 +24,9 @@ app.controller('index', function($scope, $http) {
             "width": "600px",
             "height": "300px"
         });
+        $timeout( function(){
+            $scope.loading = false;
+        }, 1000 );
     };
 
     $scope.selected.symbol && renderChart($scope.selected.symbol);
@@ -35,9 +41,9 @@ app.controller('index', function($scope, $http) {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
             transformRequest: function(obj) {
-                var str = [];
-                for(var p in obj)
-                str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                let str = [];
+                for(let p in obj)
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
                 return str.join("&");
             },
             data: {
@@ -53,14 +59,12 @@ app.controller('index', function($scope, $http) {
 
     $scope.selectCode = function(item) {
         renderChart(item.symbol);
-        $scope.selected = item;
-        $scope.open_drop_down = false;
-        localStorage.setItem("selected", JSON.stringify(item));
+        $scope.selected         = item;
+        $scope.open_drop_down   = false;
         $scope.display_selected = item.symbol + ' - ' + item.companyName;
-        // exchangeCode
+        localStorage.setItem("selected", JSON.stringify(item));
     };
 
-    $scope.open_drop_down = false;
     $scope.openDropdown = function() {
         $scope.open_drop_down = !$scope.open_drop_down;
     }
